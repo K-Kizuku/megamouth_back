@@ -1,12 +1,13 @@
 package port
 
 import (
-	"context"
 	"megamouth/api/usecase/schema"
+
+	"github.com/gin-gonic/gin"
 )
 
 type UserInputPort interface {
-	GetUserByID(ctx context.Context, userID string)
+	GetUserByID(ctx *gin.Context)
 }
 
 type UserOutputPort interface {

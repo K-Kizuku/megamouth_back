@@ -36,9 +36,9 @@ type User struct {
 // @Failure 400 {object} error
 // @Router /api/v1/user/:id [get]
 func (u *User) GetUserByID(ctx *gin.Context) {
-	userID := ctx.Param("id")
+
 	outputPort := u.OutputFactory(ctx)
 	repository := u.RepoFactory(u.Conn)
 	inputPort := u.InputFactory(outputPort, repository)
-	inputPort.GetUserByID(ctx, userID)
+	inputPort.GetUserByID(ctx)
 }

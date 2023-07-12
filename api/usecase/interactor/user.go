@@ -1,11 +1,11 @@
 package interactor
 
 import (
-	"context"
-
 	"megamouth/api/entity/repository"
 	"megamouth/api/usecase/port"
 	"megamouth/api/usecase/schema"
+
+	"github.com/gin-gonic/gin"
 )
 
 type User struct {
@@ -13,8 +13,8 @@ type User struct {
 	UserRepo   repository.UserRepository
 }
 
-func (u *User) GetUserByID(ctx context.Context, userID string) {
-	user, err := u.UserRepo.GetUserByID(ctx, userID)
+func (u *User) GetUserByID(ctx *gin.Context) {
+	user, err := u.UserRepo.GetUserByID(ctx)
 	if err != nil {
 		u.OutputPort.RenderError(err)
 		return

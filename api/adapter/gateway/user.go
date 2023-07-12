@@ -5,13 +5,12 @@ gateway パッケージは，DB操作に対するアダプターです．
 */
 
 import (
-	"context"
-
 	"megamouth/api/entity/models"
 	"megamouth/api/entity/repository"
 	"megamouth/api/utils/codes"
 	"megamouth/api/utils/errors"
 
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
@@ -27,10 +26,11 @@ func NewUserRepository(conn *gorm.DB) repository.UserRepository {
 }
 
 // GetUserByID はDBからデータを取得します．
-func (u *UserRepository) GetUserByID(ctx context.Context, userID string) (*models.User, error) {
+func (u *UserRepository) GetUserByID(ctx *gin.Context) (*models.User, error) {
 	conn := u.GetDBConn()
 	user := models.User{}
-	if err := conn.First(&user, "id = ", userID).Error; err != nil {
+	userID := ctx.Param("id")
+	if err := conn.First(&user, "id = ?", userID).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New(codes.CodeNotFound, "user not found")
 
