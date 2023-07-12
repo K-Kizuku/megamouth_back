@@ -1,0 +1,28 @@
+basePath: /api/v1
+info:
+  contact: {}
+  license:
+    name: Kizuku
+  title: Megamouth
+  version: "1.0"
+paths:
+  /api/v1/user/:id:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema: {}
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: userIDからUserを返す
+      tags:
+      - user
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

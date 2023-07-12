@@ -18,4 +18,4 @@ ARG GOARCH=arm64
 
 EXPOSE 8000
 
-CMD [ "air", "-c", ".air.toml" ]
+CMD [ "air", "-c", "/go/src/.air.toml" ]
