@@ -3,17 +3,23 @@
 ## Getting Start!
 ### 起動方法
 Dockerを起動して
-`make up`
-でAPIサーバが起動します
-`make down`
-でAPIサーバが止まります
+`make up`  
+でAPIサーバが起動します  
+`make down`  
+でAPIサーバが止まります  
 http://localhost:8000 で動作しています
 
 ### 開発方法
 サーバ起動後
-http://localhost:8000/swagger/index.html → OpenAPI
-http://localhost:8080 → adminer
+http://localhost:8000/swagger/index.html → OpenAPI  
+http://localhost:8080 → adminer  
 が動作しています
+
+## 実装詳細
+バックエンドの実装の詳細について
+### DB定義
+下記URL参照  
+https://dbdiagram.io/d/64b0424302bd1c4a5e0a3a7d
 
 ### ディレクトリ構成について
 (オレオレ)クリーンアーキテクチャを採用しています
