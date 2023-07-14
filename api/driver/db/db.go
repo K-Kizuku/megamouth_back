@@ -25,7 +25,7 @@ func InitDB() (conn *gorm.DB, err error) {
 		return nil, errors.New(codes.CodeDatabase, "postgres connection error")
 	}
 
-	if err = conn.AutoMigrate(&models.User{}); err != nil {
+	if err = conn.AutoMigrate(&models.User{}, &models.Image{}, &models.Post{}, &models.Reaction{}, &models.Authentication{}); err != nil {
 		return nil, errors.New(codes.CodeDatabase, "faild migrate")
 	}
 
