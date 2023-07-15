@@ -8,6 +8,7 @@ import (
 
 type UserInputPort interface {
 	GetUserByID(ctx *gin.Context)
+	CreateUser(ctx *gin.Context)
 }
 
 type UserOutputPort interface {

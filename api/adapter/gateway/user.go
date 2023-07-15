@@ -40,6 +40,23 @@ func (u *UserRepository) GetUserByID(ctx *gin.Context) (*models.User, error) {
 	return &user, nil
 }
 
+func (u *UserRepository) CreateUser(ctx *gin.Context) (*models.User, error) {
+	conn := u.GetDBConn()
+	user := models.User{}
+	if err := ctx.ShouldBindJSON(user); err != nil {
+		return nil, errors.New(codes.CodeBadRequest, "bad request")
+	}
+
+	if err := conn.Create(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRegistered) {
+			return nil, errors.New(codes.CodeDatabase, "faild create user")
+
+		}
+		return nil, errors.New(codes.CodeInternal, codes.CodeInternal.DetailString("adapter/gateway/CreateUser"))
+	}
+	return &user, nil
+}
+
 // GetDBConn はconnectionを取得します．
 func (u *UserRepository) GetDBConn() *gorm.DB {
 	return u.conn

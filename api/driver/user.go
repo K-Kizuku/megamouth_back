@@ -5,8 +5,6 @@ driver パッケージは，技術的な実装を持ちます．．
 */
 
 import (
-
-	// blank import for MySQL driver
 	"megamouth/api/adapter/controller"
 	"megamouth/api/adapter/gateway"
 	"megamouth/api/adapter/presenter"
@@ -25,4 +23,5 @@ func InitUserRouter(ur *gin.RouterGroup, conn *gorm.DB) {
 		Conn:          conn,
 	}
 	ur.GET("/:id", user.GetUserByID)
+	ur.POST("/create", user.CreateUser)
 }

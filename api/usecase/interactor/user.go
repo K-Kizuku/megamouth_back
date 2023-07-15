@@ -23,6 +23,16 @@ func (u *User) GetUserByID(ctx *gin.Context) {
 	u.OutputPort.Render(&res)
 }
 
+func (u *User) CreateUser(ctx *gin.Context) {
+	user, err := u.UserRepo.CreateUser(ctx)
+	if err != nil {
+		u.OutputPort.RenderError(err)
+		return
+	}
+	res := schema.UserOutput{ID: user.ID, Name: user.Name, Email: user.Email}
+	u.OutputPort.Render(&res)
+}
+
 func NewUserInputPort(outputPort port.UserOutputPort, userRepository repository.UserRepository) port.UserInputPort {
 	return &User{
 		OutputPort: outputPort,
