@@ -41,8 +41,10 @@ func Serve(addr string) {
 		v1 := api.Group("/v1")
 		{
 			ur := v1.Group("/user")
+			pr := v1.Group("/post")
 
 			InitUserRouter(ur, conn)
+			InitPostRouter(pr, conn)
 		}
 	}
 	if err := r.Run(fmt.Sprintf(":%s", config.ApiPort)); err != nil {

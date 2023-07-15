@@ -1,4 +1,81 @@
 basePath: /api/v1
+definitions:
+  schema.AuthOutput:
+    properties:
+      jwt:
+        type: string
+    type: object
+  schema.PostInput:
+    properties:
+      content:
+        type: string
+      user_id:
+        type: string
+    required:
+    - content
+    - user_id
+    type: object
+  schema.PostOutput:
+    properties:
+      author:
+        type: string
+      content:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      reaction:
+        items:
+          $ref: '#/definitions/schema.ReactionOutput'
+        type: array
+      reply:
+        $ref: '#/definitions/schema.PostOutput'
+      updatedAt:
+        type: string
+    type: object
+  schema.ReactionOutput:
+    properties:
+      reaction_id:
+        type: integer
+      user:
+        $ref: '#/definitions/schema.UserOutput'
+    type: object
+  schema.SignInInput:
+    properties:
+      id:
+        type: string
+      password:
+        type: string
+    required:
+    - id
+    - password
+    type: object
+  schema.UserInput:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - id
+    - name
+    - password
+    type: object
+  schema.UserOutput:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
 info:
   contact: {}
   license:
@@ -6,6 +83,103 @@ info:
   title: Megamouth
   version: "1.0"
 paths:
+  /api/v1/post/:id:
+    delete:
+      parameters:
+      - description: サインイン
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/schema.SignInInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.PostOutput'
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: 投稿の削除
+      tags:
+      - post
+    get:
+      parameters:
+      - description: サインイン
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/schema.SignInInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.PostOutput'
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: post_idから投稿を取得
+      tags:
+      - post
+    put:
+      parameters:
+      - description: サインイン
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/schema.PostInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.PostOutput'
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: 投稿の編集
+      tags:
+      - post
+  /api/v1/post/all:
+    get:
+      parameters:
+      - description: userの新規作成
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/schema.UserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.PostOutput'
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: 投稿の全件取得
+      tags:
+      - post
+  /api/v1/post/create:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.PostOutput'
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: 投稿の投稿
+      tags:
+      - post
   /api/v1/user/:id:
     get:
       produces:
@@ -13,11 +187,33 @@ paths:
       responses:
         "200":
           description: OK
-          schema: {}
+          schema:
+            $ref: '#/definitions/schema.UserOutput'
         "400":
           description: Bad Request
           schema: {}
       summary: userIDからUserを返す
+      tags:
+      - user
+  /api/v1/user/create:
+    post:
+      parameters:
+      - description: サインイン
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/schema.SignInInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.AuthOutput'
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: サインイン
       tags:
       - user
 securityDefinitions:
