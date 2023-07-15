@@ -9,6 +9,7 @@ import (
 	"megamouth/api/adapter/gateway"
 	"megamouth/api/adapter/presenter"
 	"megamouth/api/usecase/interactor"
+	"megamouth/api/utils/middleware"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -22,7 +23,7 @@ func InitUserRouter(ur *gin.RouterGroup, conn *gorm.DB) {
 		RepoFactory:   gateway.NewUserRepository,
 		Conn:          conn,
 	}
-	ur.GET("/:id", user.GetUserByID)
+	ur.GET("/:id", middleware.AuthMiddleware, user.GetUserByID)
 	ur.POST("/create", user.CreateUser)
 	ur.POST("/login", user.LoginUser)
 }

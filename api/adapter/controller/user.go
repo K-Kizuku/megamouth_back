@@ -34,10 +34,10 @@ type User struct {
 // @Summary userIDからUserを返す
 // @Tags user
 // @Produce  json
-// @Param       id   path     string      false "ID"
+// @Param       id   path     string      false "id"
 // @Success 200 {object} schema.UserOutput
 // @Failure 400 {object} error
-// @Router /user/:id [get]
+// @Router /user/[id] [get]
 func (u *User) GetUserByID(ctx *gin.Context) {
 	outputPort := u.OutputFactory(ctx)
 	repository := u.RepoFactory(u.Conn)

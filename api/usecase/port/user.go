@@ -1,6 +1,7 @@
 package port
 
 import (
+	"megamouth/api/entity/models"
 	"megamouth/api/usecase/schema"
 
 	"github.com/gin-gonic/gin"
@@ -14,5 +15,6 @@ type UserInputPort interface {
 
 type UserOutputPort interface {
 	Render(*schema.UserOutput)
+	RenderJWT(*models.User)
 	RenderError(error)
 }

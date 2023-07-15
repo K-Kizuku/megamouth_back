@@ -10,8 +10,10 @@ import (
 	"log"
 	"net/http"
 
+	"megamouth/api/entity/models"
 	"megamouth/api/usecase/port"
 	"megamouth/api/usecase/schema"
+	"megamouth/api/utils/tools"
 
 	"github.com/gin-gonic/gin"
 )
@@ -32,6 +34,11 @@ func NewUserOutputPort(ctx *gin.Context) port.UserOutputPort {
 func (u *User) Render(user *schema.UserOutput) {
 	u.ctx.JSON(http.StatusOK, &user)
 
+}
+
+func (u *User) RenderJWT(user *models.User) {
+	jwt, _ := tools.GenerateJWT(user)
+	u.ctx.JSON(http.StatusOK, &jwt)
 }
 
 // RenderError はErrorを出力します．

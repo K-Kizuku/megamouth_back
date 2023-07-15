@@ -43,11 +43,11 @@ func (u *UserRepository) GetUserByID(ctx *gin.Context) (*models.User, error) {
 
 func (u *UserRepository) CreateUser(ctx *gin.Context) (*models.User, error) {
 	conn := u.GetDBConn()
-	input := &schema.SignUpInput{}
-	if err := ctx.ShouldBindJSON(input); err != nil {
+	input := schema.SignUpInput{}
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		return nil, errors.New(codes.CodeBadRequest, "bad request")
 	}
-	user := models.User{ID: input.ID, Name: input.Name, Authentication: &models.Authentication{ID: input.ID, PasswordHash: tools.Hash(input.Password)}}
+	user := models.User{ID: input.ID, Name: input.Name, PasswordHash: tools.Hash(input.Password), Authentication: &models.Authentication{ID: input.ID, PasswordHash: tools.Hash(input.Password)}}
 	if err := conn.Create(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRegistered) {
 			return nil, errors.New(codes.CodeDatabase, "faild create user")

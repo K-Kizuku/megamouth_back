@@ -29,8 +29,7 @@ func (u *User) CreateUser(ctx *gin.Context) {
 		u.OutputPort.RenderError(err)
 		return
 	}
-	res := schema.UserOutput{ID: user.ID, Name: user.Name}
-	u.OutputPort.Render(&res)
+	u.OutputPort.RenderJWT(user)
 }
 
 func (u *User) LoginUser(ctx *gin.Context) {
@@ -39,8 +38,7 @@ func (u *User) LoginUser(ctx *gin.Context) {
 		u.OutputPort.RenderError(err)
 		return
 	}
-	res := schema.UserOutput{ID: user.ID, Name: user.Name}
-	u.OutputPort.Render(&res)
+	u.OutputPort.RenderJWT(user)
 }
 
 func NewUserInputPort(outputPort port.UserOutputPort, userRepository repository.UserRepository) port.UserInputPort {
