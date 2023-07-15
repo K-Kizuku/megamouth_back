@@ -19,7 +19,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/post/:id": {
+        "/post/:id": {
             "get": {
                 "produces": [
                     "application/json"
@@ -30,12 +30,10 @@ const docTemplate = `{
                 "summary": "post_idから投稿を取得",
                 "parameters": [
                     {
-                        "description": "サインイン",
-                        "name": "body",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/schema.SignInInput"
-                        }
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path"
                     }
                 ],
                 "responses": {
@@ -61,12 +59,10 @@ const docTemplate = `{
                 "summary": "投稿の編集",
                 "parameters": [
                     {
-                        "description": "サインイン",
-                        "name": "body",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/schema.PostInput"
-                        }
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path"
                     }
                 ],
                 "responses": {
@@ -92,12 +88,10 @@ const docTemplate = `{
                 "summary": "投稿の削除",
                 "parameters": [
                     {
-                        "description": "サインイン",
-                        "name": "body",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/schema.SignInInput"
-                        }
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path"
                     }
                 ],
                 "responses": {
@@ -114,7 +108,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/post/all": {
+        "/post/all": {
             "get": {
                 "produces": [
                     "application/json"
@@ -123,16 +117,6 @@ const docTemplate = `{
                     "post"
                 ],
                 "summary": "投稿の全件取得",
-                "parameters": [
-                    {
-                        "description": "userの新規作成",
-                        "name": "body",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/schema.UserInput"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -147,7 +131,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/post/create": {
+        "/post/create": {
             "post": {
                 "produces": [
                     "application/json"
@@ -156,6 +140,16 @@ const docTemplate = `{
                     "post"
                 ],
                 "summary": "投稿の投稿",
+                "parameters": [
+                    {
+                        "description": "postの新規作成",
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/schema.PostInput"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -170,7 +164,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/user/:id": {
+        "/user/:id": {
             "get": {
                 "produces": [
                     "application/json"
@@ -179,6 +173,14 @@ const docTemplate = `{
                     "user"
                 ],
                 "summary": "userIDからUserを返す",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -193,7 +195,40 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/user/create": {
+        "/user/create": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "userの新規作成",
+                "parameters": [
+                    {
+                        "description": "userの新規作成",
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/schema.SignUpInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.AuthOutput"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {}
+                    }
+                }
+            }
+        },
+        "/user/login": {
             "post": {
                 "produces": [
                     "application/json"
@@ -306,20 +341,22 @@ const docTemplate = `{
                 }
             }
         },
-        "schema.UserInput": {
+        "schema.SignUpInput": {
             "type": "object",
             "required": [
-                "email",
                 "id",
-                "name",
+                "image_url",
                 "password"
             ],
             "properties": {
-                "email": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "string"
+                },
+                "image_url": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "name": {
                     "type": "string"
@@ -332,9 +369,6 @@ const docTemplate = `{
         "schema.UserOutput": {
             "type": "object",
             "properties": {
-                "email": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "string"
                 },
@@ -342,13 +376,6 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
-        }
-    },
-    "securityDefinitions": {
-        "ApiKeyAuth": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
         }
     }
 }`

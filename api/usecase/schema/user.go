@@ -1,15 +1,13 @@
 package schema
 
 type UserOutput struct {
-	ID    string `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }
 
 type UserInput struct {
 	ID       string `json:"id" binding:"required"`
 	Name     string `json:"name" binding:"required"`
-	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 
@@ -22,9 +20,8 @@ type SignInInput struct {
 // サインアップ時の入力
 type SignUpInput struct {
 	ID       string   `json:"id" binding:"required"`
-	Name     string   `json:"name" binding:"required"`
+	Name     string   `json:"name"`
 	Password string   `json:"password" binding:"required"`
-	Email    string   `json:"email" binding:"required"`
 	ImageURL []string `json:"image_url" binding:"required"`
 }
 

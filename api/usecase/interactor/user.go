@@ -19,7 +19,7 @@ func (u *User) GetUserByID(ctx *gin.Context) {
 		u.OutputPort.RenderError(err)
 		return
 	}
-	res := schema.UserOutput{ID: user.ID, Name: user.Name, Email: user.Email}
+	res := schema.UserOutput{ID: user.ID, Name: user.Name}
 	u.OutputPort.Render(&res)
 }
 
@@ -29,7 +29,17 @@ func (u *User) CreateUser(ctx *gin.Context) {
 		u.OutputPort.RenderError(err)
 		return
 	}
-	res := schema.UserOutput{ID: user.ID, Name: user.Name, Email: user.Email}
+	res := schema.UserOutput{ID: user.ID, Name: user.Name}
+	u.OutputPort.Render(&res)
+}
+
+func (u *User) LoginUser(ctx *gin.Context) {
+	user, err := u.UserRepo.GetUserByID(ctx)
+	if err != nil {
+		u.OutputPort.RenderError(err)
+		return
+	}
+	res := schema.UserOutput{ID: user.ID, Name: user.Name}
 	u.OutputPort.Render(&res)
 }
 

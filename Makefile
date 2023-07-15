@@ -7,13 +7,16 @@ else
 	DOCKER_COMPOSE=docker-compose
 endif
 
-init: up-d run
+init: up run
 
 build:
 	$(DOCKER_COMPOSE) build
 
 up:
 	$(DOCKER_COMPOSE) up -d
+
+up-b:
+	$(DOCKER_COMPOSE) up -d --build  
 
 down:
 	$(DOCKER_COMPOSE) down

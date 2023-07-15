@@ -7,6 +7,7 @@ presenter パッケージは，出力に対するアダプターです．
 */
 
 import (
+	"log"
 	"net/http"
 
 	"megamouth/api/usecase/port"
@@ -36,5 +37,6 @@ func (u *User) Render(user *schema.UserOutput) {
 // RenderError はErrorを出力します．
 func (u *User) RenderError(err error) {
 	u.ctx.JSON(http.StatusInternalServerError, err)
+	log.Fatal(err)
 
 }

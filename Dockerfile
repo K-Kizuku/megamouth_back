@@ -2,7 +2,7 @@ FROM golang:1.20.1-alpine as dev
 
 WORKDIR /go/src
 
-COPY go.mod go.sum ./
+COPY . ./
 RUN go mod download
 
 RUN apk upgrade --update && apk --no-cache add git
@@ -18,4 +18,4 @@ ARG GOARCH=arm64
 
 EXPOSE 8000
 
-CMD [ "air", "-c", "/go/src/.air.toml" ]
+CMD [ "go", "run", "." ]

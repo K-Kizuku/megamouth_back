@@ -5,6 +5,7 @@ import (
 	"megamouth/api/entity/repository"
 	"megamouth/api/utils/codes"
 	"megamouth/api/utils/errors"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -41,7 +42,7 @@ func (p *PostRepository) CreatePost(ctx *gin.Context) (*models.Post, error) {
 func (p *PostRepository) GetPosts(ctx *gin.Context) (*models.Post, error) {
 	conn := p.GetDBConn()
 	post := models.Post{}
-	if err := conn.Find(&post).Error; err != nil {
+	if err := conn.Where("deleted_at = ?", nil).Find(&post).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New(codes.CodeNotFound, "posts not found")
 
@@ -84,11 +85,11 @@ func (p *PostRepository) DeletepostByID(ctx *gin.Context) (*models.Post, error) 
 	conn := p.GetDBConn()
 	post := models.Post{}
 	postID := ctx.Param("id")
-	if err := conn.First(&post, "id = ?", postID).Error; err != nil {
+	if err := conn.Model(&post).Where("id = ?", postID).Update("deleted_at", time.Now()).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New(codes.CodeNotFound, "post not found")
 		}
-		return nil, errors.New(codes.CodeInternal, codes.CodeInternal.DetailString("adapter/gateway/GetPostByID"))
+		return nil, errors.New(codes.CodeInternal, codes.CodeInternal.DetailString("adapter/gateway/UpdatePostByID"))
 	}
 	return &post, nil
 }

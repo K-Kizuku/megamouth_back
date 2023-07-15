@@ -51,26 +51,25 @@ definitions:
     - id
     - password
     type: object
-  schema.UserInput:
+  schema.SignUpInput:
     properties:
-      email:
-        type: string
       id:
         type: string
+      image_url:
+        items:
+          type: string
+        type: array
       name:
         type: string
       password:
         type: string
     required:
-    - email
     - id
-    - name
+    - image_url
     - password
     type: object
   schema.UserOutput:
     properties:
-      email:
-        type: string
       id:
         type: string
       name:
@@ -83,14 +82,13 @@ info:
   title: Megamouth
   version: "1.0"
 paths:
-  /api/v1/post/:id:
+  /post/:id:
     delete:
       parameters:
-      - description: サインイン
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/schema.SignInInput'
+      - description: ID
+        in: path
+        name: id
+        type: integer
       produces:
       - application/json
       responses:
@@ -106,11 +104,10 @@ paths:
       - post
     get:
       parameters:
-      - description: サインイン
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/schema.SignInInput'
+      - description: ID
+        in: path
+        name: id
+        type: integer
       produces:
       - application/json
       responses:
@@ -126,7 +123,42 @@ paths:
       - post
     put:
       parameters:
-      - description: サインイン
+      - description: ID
+        in: path
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.PostOutput'
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: 投稿の編集
+      tags:
+      - post
+  /post/all:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.PostOutput'
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: 投稿の全件取得
+      tags:
+      - post
+  /post/create:
+    post:
+      parameters:
+      - description: postの新規作成
         in: body
         name: body
         schema:
@@ -141,47 +173,16 @@ paths:
         "400":
           description: Bad Request
           schema: {}
-      summary: 投稿の編集
-      tags:
-      - post
-  /api/v1/post/all:
-    get:
-      parameters:
-      - description: userの新規作成
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/schema.UserInput'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schema.PostOutput'
-        "400":
-          description: Bad Request
-          schema: {}
-      summary: 投稿の全件取得
-      tags:
-      - post
-  /api/v1/post/create:
-    post:
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schema.PostOutput'
-        "400":
-          description: Bad Request
-          schema: {}
       summary: 投稿の投稿
       tags:
       - post
-  /api/v1/user/:id:
+  /user/:id:
     get:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        type: string
       produces:
       - application/json
       responses:
@@ -195,7 +196,28 @@ paths:
       summary: userIDからUserを返す
       tags:
       - user
-  /api/v1/user/create:
+  /user/create:
+    post:
+      parameters:
+      - description: userの新規作成
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/schema.SignUpInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.AuthOutput'
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: userの新規作成
+      tags:
+      - user
+  /user/login:
     post:
       parameters:
       - description: サインイン
@@ -216,9 +238,4 @@ paths:
       summary: サインイン
       tags:
       - user
-securityDefinitions:
-  ApiKeyAuth:
-    in: header
-    name: Authorization
-    type: apiKey
 swagger: "2.0"

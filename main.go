@@ -13,9 +13,7 @@ import (
 // @version  1.0
 // @license.name Kizuku
 // @BasePath /api/v1
-// @securityDefinitions.apikey ApiKeyAuth
 // @in header
-// @name Authorization
 func main() {
 	config.LoadEnv()
 	log.Println("Server running...")

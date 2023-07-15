@@ -34,9 +34,10 @@ type User struct {
 // @Summary userIDからUserを返す
 // @Tags user
 // @Produce  json
+// @Param       id   path     string      false "ID"
 // @Success 200 {object} schema.UserOutput
 // @Failure 400 {object} error
-// @Router /api/v1/user/:id [get]
+// @Router /user/:id [get]
 func (u *User) GetUserByID(ctx *gin.Context) {
 	outputPort := u.OutputFactory(ctx)
 	repository := u.RepoFactory(u.Conn)
@@ -47,15 +48,15 @@ func (u *User) GetUserByID(ctx *gin.Context) {
 // @Summary userの新規作成
 // @Tags user
 // @Produce  json
-// @Param       body body     schema.UserInput false "userの新規作成"
-// @Success 200 {object} schema.UserOutput
+// @Param       body body     schema.SignUpInput false "userの新規作成"
+// @Success 200 {object} schema.AuthOutput
 // @Failure 400 {object} error
-// @Router /api/v1/user/create [post]
+// @Router /user/create [post]
 func (u *User) CreateUser(ctx *gin.Context) {
 	outputPort := u.OutputFactory(ctx)
 	repository := u.RepoFactory(u.Conn)
 	inputPort := u.InputFactory(outputPort, repository)
-	inputPort.GetUserByID(ctx)
+	inputPort.CreateUser(ctx)
 }
 
 // @Summary サインイン
@@ -64,10 +65,10 @@ func (u *User) CreateUser(ctx *gin.Context) {
 // @Param       body body     schema.SignInInput false "サインイン"
 // @Success 200 {object} schema.AuthOutput
 // @Failure 400 {object} error
-// @Router /api/v1/user/create [post]
+// @Router /user/login [post]
 func (u *User) LoginUser(ctx *gin.Context) {
 	outputPort := u.OutputFactory(ctx)
 	repository := u.RepoFactory(u.Conn)
 	inputPort := u.InputFactory(outputPort, repository)
-	inputPort.GetUserByID(ctx)
+	inputPort.LoginUser(ctx)
 }
