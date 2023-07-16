@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package recognizer;
+option go_package = "pkg/grpc";
+
+message ImageURL { string url = 1; }
+
+message Account { string msg = 1; }
+
+service ImageService { rpc ImageReq(ImageURL) returns (Account); }

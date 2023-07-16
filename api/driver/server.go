@@ -8,8 +8,11 @@ import (
 	"megamouth/api/driver/db"
 	"megamouth/api/utils/config"
 
+	pb "megamouth/grpc"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"google.golang.org/grpc"
 
 	// OpenAPI
 	_ "megamouth/docs"
@@ -23,6 +26,12 @@ func Serve(addr string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	rpc, err := grpc.Dial("localhost:50052", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer rpc.Close()
+	client := pb.NewImageServiceClient(rpc)
 	r := gin.Default()
 	r.Use(cors.Default())
 
@@ -42,9 +51,11 @@ func Serve(addr string) {
 		{
 			ur := v1.Group("/user")
 			pr := v1.Group("/post")
+			lr := v1.Group("/live")
 
 			InitUserRouter(ur, conn)
 			InitPostRouter(pr, conn)
+			InitLiveRouter(lr, conn, client)
 		}
 	}
 	if err := r.Run(fmt.Sprintf(":%s", config.ApiPort)); err != nil {
