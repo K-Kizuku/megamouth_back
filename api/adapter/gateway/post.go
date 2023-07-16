@@ -16,7 +16,6 @@ type PostRepository struct {
 	conn *gorm.DB
 }
 
-// NewUserRepository はUserRepositoryを返します．
 func NewPostRepository(conn *gorm.DB) repository.PostRepository {
 	return &PostRepository{
 		conn: conn,

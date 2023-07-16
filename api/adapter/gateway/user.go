@@ -56,6 +56,17 @@ func (u *UserRepository) CreateUser(ctx *gin.Context) (*models.User, error) {
 		}
 		return nil, errors.New(codes.CodeInternal.DetailString("adapter/gateway/CreateUser"))
 	}
+	images := make([]models.Image, len(input.ImageURL))
+	for i, imageURL := range input.ImageURL {
+		images[i] = models.Image{URL: imageURL, Owner: input.ID}
+	}
+
+	if err := conn.Create(&images).Error; err != nil {
+		if errors.Is(err, gorm.ErrRegistered) {
+			return nil, errors.New("failed to create user")
+		}
+		return nil, errors.New(codes.CodeInternal.DetailString("adapter/gateway/CreateUser"))
+	}
 	return &user, nil
 }
 
@@ -70,7 +81,6 @@ func (u *UserRepository) LoginUser(ctx *gin.Context) (*models.User, error) {
 		return nil, errors.New("user not found")
 	}
 	if tools.Hash(input.Password) != user.PasswordHash {
-		log.Fatal(tools.Hash(input.Password))
 		return nil, errors.New("password invalid")
 	}
 	return &user, nil
