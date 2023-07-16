@@ -36,6 +36,11 @@ type ImageInput struct {
 	ImageURL []string `json:"image_url" binding:"required"`
 }
 
-// type Sastoken struct {
-// 	Sas string
-// }
+type AuthOutputWithUser struct {
+	Jwt  string     `json:"jwt"`
+	User UserOutput `json:"user"`
+}
+
+type MessageOutput struct {
+	Message bool `json:"message"`
+}

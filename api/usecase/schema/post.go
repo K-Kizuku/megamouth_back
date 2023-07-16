@@ -1,6 +1,8 @@
 package schema
 
-import "time"
+import (
+	"time"
+)
 
 type PostInput struct {
 	UserID  string `json:"user_id" binding:"required"`
@@ -15,6 +17,7 @@ type PostOutput struct {
 	Reaction  []*ReactionOutput
 	CreatedAt time.Time
 	UpdatedAt time.Time
+	DeletedAt time.Time
 }
 
 type ReplyInput struct {

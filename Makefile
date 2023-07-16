@@ -26,3 +26,11 @@ exec:
 
 run:
 	docker exec -it $(container_name) bash -c "go run main.go"
+
+swag:
+	swag init -g main.go
+
+d-build:
+	docker build -t linux-go-api --platform linux/x86_64 . 
+
+

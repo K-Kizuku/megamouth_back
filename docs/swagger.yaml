@@ -5,6 +5,11 @@ definitions:
       jwt:
         type: string
     type: object
+  schema.MessageOutput:
+    properties:
+      message:
+        type: boolean
+    type: object
   schema.PostInput:
     properties:
       content:
@@ -22,6 +27,8 @@ definitions:
       content:
         type: string
       createdAt:
+        type: string
+      deletedAt:
         type: string
       id:
         type: integer
@@ -82,7 +89,7 @@ info:
   title: Megamouth
   version: "1.0"
 paths:
-  /post/:id:
+  /post/{id}:
     delete:
       parameters:
       - description: ID
@@ -123,6 +130,11 @@ paths:
       - post
     put:
       parameters:
+      - description: postの編集
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/schema.PostInput'
       - description: ID
         in: path
         name: id
@@ -147,8 +159,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/schema.PostOutput'
         "400":
           description: Bad Request
           schema: {}
@@ -176,10 +186,10 @@ paths:
       summary: 投稿の投稿
       tags:
       - post
-  /user/:id:
+  /user/{id}:
     get:
       parameters:
-      - description: ID
+      - description: id
         in: path
         name: id
         type: string
@@ -217,6 +227,26 @@ paths:
       summary: userの新規作成
       tags:
       - user
+  /user/is_used/{id}:
+    get:
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.MessageOutput'
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: IDが使用済みかどうか(使用済みはtrueが返る)
+      tags:
+      - user
   /user/login:
     post:
       parameters:
@@ -238,4 +268,7 @@ paths:
       summary: サインイン
       tags:
       - user
+securityDefinitions:
+  BearerAuth:
+    type: basic
 swagger: "2.0"

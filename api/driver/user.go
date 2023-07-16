@@ -26,4 +26,5 @@ func InitUserRouter(ur *gin.RouterGroup, conn *gorm.DB) {
 	ur.GET("/:id", middleware.AuthMiddleware, user.GetUserByID)
 	ur.POST("/create", user.CreateUser)
 	ur.POST("/login", user.LoginUser)
+	ur.GET("/is_used/:id", user.IsUsedName)
 }

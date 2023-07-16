@@ -36,6 +36,12 @@ func (u *User) Render(user *schema.UserOutput) {
 
 }
 
+func (u *User) RenderJWTwithUser(user *models.User) {
+	jwt, _ := tools.GenerateJWT(user)
+	userOutput := schema.UserOutput{ID: user.ID, Name: user.Name}
+	u.ctx.JSON(http.StatusOK, schema.AuthOutputWithUser{Jwt: jwt.Jwt, User: userOutput})
+}
+
 func (u *User) RenderJWT(user *models.User) {
 	jwt, _ := tools.GenerateJWT(user)
 	u.ctx.JSON(http.StatusOK, &jwt)
@@ -44,6 +50,10 @@ func (u *User) RenderJWT(user *models.User) {
 // RenderError はErrorを出力します．
 func (u *User) RenderError(err error) {
 	u.ctx.JSON(http.StatusInternalServerError, err)
-	log.Fatal(err)
+	log.Print(err)
+}
 
+func (u *User) RenderIsUsed(message bool) {
+	m := schema.MessageOutput{Message: message}
+	u.ctx.JSON(http.StatusOK, &m)
 }

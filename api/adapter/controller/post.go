@@ -13,6 +13,7 @@ import (
 	"megamouth/api/entity/repository"
 	"megamouth/api/usecase/port"
 
+	_ "megamouth/api/entity/models"
 	_ "megamouth/api/usecase/schema"
 
 	"github.com/gin-gonic/gin"
@@ -30,6 +31,7 @@ type Post struct {
 // @Summary 投稿の投稿
 // @Tags post
 // @Produce  json
+// @securityDefinitions.basic BasicAuth
 // @Param       body body     schema.PostInput false "postの新規作成"
 // @Success 200 {object} schema.PostOutput
 // @Failure 400 {object} error
@@ -44,7 +46,8 @@ func (p *Post) CreatePost(ctx *gin.Context) {
 // @Summary 投稿の全件取得
 // @Tags post
 // @Produce  json
-// @Success 200 {object} schema.PostOutput
+// @securityDefinitions.basic BasicAuth
+// @Success 200
 // @Failure 400 {object} error
 // @Router /post/all [get]
 func (p *Post) GetPosts(ctx *gin.Context) {
@@ -57,10 +60,11 @@ func (p *Post) GetPosts(ctx *gin.Context) {
 // @Summary post_idから投稿を取得
 // @Tags post
 // @Produce  json
+// @securityDefinitions.basic BasicAuth
 // @Param       id   path   int   false "ID"
 // @Success 200 {object} schema.PostOutput
 // @Failure 400 {object} error
-// @Router /post/:id [get]
+// @Router /post/{id} [get]
 func (p *Post) GetPostByID(ctx *gin.Context) {
 	outputPort := p.OutputFactory(ctx)
 	repository := p.RepoFactory(p.Conn)
@@ -71,10 +75,12 @@ func (p *Post) GetPostByID(ctx *gin.Context) {
 // @Summary 投稿の編集
 // @Tags post
 // @Produce  json
+// @securityDefinitions.basic BasicAuth
+// @Param       body body     schema.PostInput false "postの編集"
 // @Param       id   path   int   false  "ID"
 // @Success 200 {object} schema.PostOutput
 // @Failure 400 {object} error
-// @Router /post/:id [put]
+// @Router /post/{id} [put]
 func (p *Post) UpdatePostByID(ctx *gin.Context) {
 	outputPort := p.OutputFactory(ctx)
 	repository := p.RepoFactory(p.Conn)
@@ -85,10 +91,11 @@ func (p *Post) UpdatePostByID(ctx *gin.Context) {
 // @Summary 投稿の削除
 // @Tags post
 // @Produce  json
+// @securityDefinitions.basic BearerAuth
 // @Param       id   path   int   false "ID"
 // @Success 200 {object} schema.PostOutput
 // @Failure 400 {object} error
-// @Router /post/:id [delete]
+// @Router /post/{id} [delete]
 func (p *Post) DeletepostByID(ctx *gin.Context) {
 	outputPort := p.OutputFactory(ctx)
 	repository := p.RepoFactory(p.Conn)

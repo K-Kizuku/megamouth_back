@@ -10,4 +10,5 @@ type UserRepository interface {
 	GetUserByID(ctx *gin.Context) (*models.User, error)
 	CreateUser(ctx *gin.Context) (*models.User, error)
 	LoginUser(ctx *gin.Context) (*models.User, error)
+	IsUsedName(ctx *gin.Context) (*models.User, error)
 }

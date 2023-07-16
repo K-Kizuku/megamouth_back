@@ -7,8 +7,10 @@ presenter パッケージは，出力に対するアダプターです．
 */
 
 import (
+	"log"
 	"net/http"
 
+	"megamouth/api/entity/models"
 	"megamouth/api/usecase/port"
 	"megamouth/api/usecase/schema"
 
@@ -30,11 +32,15 @@ func NewPostOutputPort(ctx *gin.Context) port.PostOutputPort {
 // Render はNameを出力します．
 func (p *Post) Render(post *schema.PostOutput) {
 	p.ctx.JSON(http.StatusOK, &post)
+}
 
+func (p *Post) RenderAll(post []models.Post) {
+	p.ctx.JSON(http.StatusOK, &post)
 }
 
 // RenderError はErrorを出力します．
 func (p *Post) RenderError(err error) {
+	log.Print(err)
 	p.ctx.JSON(http.StatusInternalServerError, err)
 
 }

@@ -13,7 +13,9 @@ import (
 // @version  1.0
 // @license.name Kizuku
 // @BasePath /api/v1
+// @securityDefinitions.basic BearerAuth
 // @in header
+// @name Authorization
 func main() {
 	config.LoadEnv()
 	log.Println("Server running...")

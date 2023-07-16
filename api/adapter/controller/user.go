@@ -37,7 +37,7 @@ type User struct {
 // @Param       id   path     string      false "id"
 // @Success 200 {object} schema.UserOutput
 // @Failure 400 {object} error
-// @Router /user/[id] [get]
+// @Router /user/{id} [get]
 func (u *User) GetUserByID(ctx *gin.Context) {
 	outputPort := u.OutputFactory(ctx)
 	repository := u.RepoFactory(u.Conn)
@@ -71,4 +71,18 @@ func (u *User) LoginUser(ctx *gin.Context) {
 	repository := u.RepoFactory(u.Conn)
 	inputPort := u.InputFactory(outputPort, repository)
 	inputPort.LoginUser(ctx)
+}
+
+// @Summary IDが使用済みかどうか(使用済みはtrueが返る)
+// @Tags user
+// @Produce  json
+// @Param       id   path     string      false "id"
+// @Success 200 {object} schema.MessageOutput
+// @Failure 400 {object} error
+// @Router /user/is_used/{id} [get]
+func (u *User) IsUsedName(ctx *gin.Context) {
+	outputPort := u.OutputFactory(ctx)
+	repository := u.RepoFactory(u.Conn)
+	inputPort := u.InputFactory(outputPort, repository)
+	inputPort.IsUsedName(ctx)
 }

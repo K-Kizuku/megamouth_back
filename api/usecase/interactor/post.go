@@ -13,7 +13,6 @@ type Post struct {
 	PostRepo   repository.PostRepository
 }
 
-// user作成
 func (p *Post) CreatePost(ctx *gin.Context) {
 	post, err := p.PostRepo.CreatePost(ctx)
 	if err != nil {
@@ -31,8 +30,8 @@ func (p *Post) GetPosts(ctx *gin.Context) {
 		p.OutputPort.RenderError(err)
 		return
 	}
-	res := schema.PostOutput{ID: post.ID, Author: post.Author, Content: post.Content, Reply: nil, Reaction: nil, CreatedAt: post.CreatedAt, UpdatedAt: post.UpdatedAt}
-	p.OutputPort.Render(&res)
+	// res := schema.PostOutput{ID: post.ID, Author: post.Author, Content: post.Content, Reply: nil, Reaction: nil, CreatedAt: post.CreatedAt, UpdatedAt: post.UpdatedAt}
+	p.OutputPort.RenderAll(post)
 }
 
 // 投稿の1件取得

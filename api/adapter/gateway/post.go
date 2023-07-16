@@ -3,6 +3,7 @@ package gateway
 import (
 	"megamouth/api/entity/models"
 	"megamouth/api/entity/repository"
+	"megamouth/api/usecase/schema"
 	"megamouth/api/utils/codes"
 	"megamouth/api/utils/errors"
 	"time"
@@ -24,14 +25,14 @@ func NewPostRepository(conn *gorm.DB) repository.PostRepository {
 
 func (p *PostRepository) CreatePost(ctx *gin.Context) (*models.Post, error) {
 	conn := p.GetDBConn()
-	post := models.Post{}
-	if err := ctx.ShouldBindJSON(post); err != nil {
+	input := schema.PostInput{}
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		return nil, errors.New(codes.CodeBadRequest, "bad request")
 	}
+	post := models.Post{Author: input.UserID, Content: input.Content}
 	if err := conn.Create(&post).Error; err != nil {
 		if errors.Is(err, gorm.ErrRegistered) {
 			return nil, errors.New(codes.CodeDatabase, "faild create post")
-
 		}
 		return nil, errors.New(codes.CodeInternal, codes.CodeInternal.DetailString("adapter/gateway/CreatePost"))
 	}
@@ -39,17 +40,17 @@ func (p *PostRepository) CreatePost(ctx *gin.Context) (*models.Post, error) {
 	return &post, nil
 }
 
-func (p *PostRepository) GetPosts(ctx *gin.Context) (*models.Post, error) {
+func (p *PostRepository) GetPosts(ctx *gin.Context) ([]models.Post, error) {
 	conn := p.GetDBConn()
-	post := models.Post{}
-	if err := conn.Where("deleted_at = ?", nil).Find(&post).Error; err != nil {
+	post := []models.Post{}
+	if err := conn.Find(&post).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New(codes.CodeNotFound, "posts not found")
 
 		}
 		return nil, errors.New(codes.CodeInternal, codes.CodeInternal.DetailString("adapter/gateway/GetPosts"))
 	}
-	return &post, nil
+	return post, nil
 }
 
 func (p *PostRepository) GetPostByID(ctx *gin.Context) (*models.Post, error) {
@@ -67,12 +68,13 @@ func (p *PostRepository) GetPostByID(ctx *gin.Context) (*models.Post, error) {
 
 func (p *PostRepository) UpdatePostByID(ctx *gin.Context) (*models.Post, error) {
 	conn := p.GetDBConn()
-	post := models.Post{}
+	input := schema.PostInput{}
 	postID := ctx.Param("id")
-	if err := ctx.ShouldBindJSON(post); err != nil {
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		return nil, errors.New(codes.CodeBadRequest, "bad request")
 	}
-	if err := conn.Model(&post).Where("id = ?", postID).Update("content", post.Content).Error; err != nil {
+	post := models.Post{}
+	if err := conn.Model(&post).Where("id = ?", postID).Update("content", input.Content).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New(codes.CodeNotFound, "post not found")
 		}
