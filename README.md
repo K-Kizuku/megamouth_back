@@ -2,7 +2,7 @@
 
 ## Getting Start!
 ### 起動方法
-Dockerを起動して
+Dockerを起動して  
 `make up`  
 でAPIサーバが起動します  
 `make down`  
@@ -10,10 +10,10 @@ Dockerを起動して
 http://localhost:8000 で動作しています
 
 ### 開発方法
-サーバ起動後
+サーバ起動後  
 http://localhost:8000/swagger/index.html → OpenAPI  
 http://localhost:8080 → adminer  
-が動作しています
+が動作しています  
 
 ## 実装詳細
 バックエンドの実装の詳細について
@@ -58,13 +58,22 @@ https://dbdiagram.io/d/64b0424302bd1c4a5e0a3a7d
 │       │   └── codes.go
 │       ├── config // 環境変数の読み込み
 │       │   └── env.go
-│       └── errors // 独自のエラー処理
-│           └── errors.go
+│       ├── errors // 独自のエラー処理
+│       │   └── errors.go
+│       ├── middleware // ミドルウェア
+│       │   └── authMiddleware.go
+│       └── tools // 各種ツール群
+│           ├── hash.go // ハッシュ化
+│           └── token.go // JWT発行
 ├── compose.yml
 ├── docs // OpenAPI用．swaggo/swagによる自動生成
 │   ├── docs.go
 │   ├── swagger.json
 │   └── swagger.yaml
+├── grpc // gRPCの自動生成ファイル
+│   ├── recognizer.pb.go
+│   ├── recognizer.proto
+│   └── recognizer_grpc.pb.go
 ├── go.mod
 ├── go.sum
 └──  main.go
