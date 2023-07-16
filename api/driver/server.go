@@ -51,11 +51,11 @@ func Serve(addr string) {
 		{
 			ur := v1.Group("/user")
 			pr := v1.Group("/post")
-			lr := v1.Group("/live")
+			gr := v1.Group("/grpc")
 
 			InitUserRouter(ur, conn)
 			InitPostRouter(pr, conn)
-			InitLiveRouter(lr, conn, client)
+			InitLiveRouter(gr, conn, client)
 		}
 	}
 	if err := r.Run(fmt.Sprintf(":%s", config.ApiPort)); err != nil {

@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ImageService_ImageReq_FullMethodName = "/recognizer.ImageService/ImageReq"
+	ImageService_ImageReqBase64_FullMethodName = "/recognizer.ImageService/ImageReqBase64"
 )
 
 // ImageServiceClient is the client API for ImageService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ImageServiceClient interface {
-	ImageReq(ctx context.Context, in *ImageURL, opts ...grpc.CallOption) (*Account, error)
+	ImageReqBase64(ctx context.Context, in *ImageBase64, opts ...grpc.CallOption) (*Account, error)
 }
 
 type imageServiceClient struct {
@@ -37,9 +37,9 @@ func NewImageServiceClient(cc grpc.ClientConnInterface) ImageServiceClient {
 	return &imageServiceClient{cc}
 }
 
-func (c *imageServiceClient) ImageReq(ctx context.Context, in *ImageURL, opts ...grpc.CallOption) (*Account, error) {
+func (c *imageServiceClient) ImageReqBase64(ctx context.Context, in *ImageBase64, opts ...grpc.CallOption) (*Account, error) {
 	out := new(Account)
-	err := c.cc.Invoke(ctx, ImageService_ImageReq_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ImageService_ImageReqBase64_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (c *imageServiceClient) ImageReq(ctx context.Context, in *ImageURL, opts ..
 // All implementations must embed UnimplementedImageServiceServer
 // for forward compatibility
 type ImageServiceServer interface {
-	ImageReq(context.Context, *ImageURL) (*Account, error)
+	ImageReqBase64(context.Context, *ImageBase64) (*Account, error)
 	mustEmbedUnimplementedImageServiceServer()
 }
 
@@ -58,8 +58,8 @@ type ImageServiceServer interface {
 type UnimplementedImageServiceServer struct {
 }
 
-func (UnimplementedImageServiceServer) ImageReq(context.Context, *ImageURL) (*Account, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ImageReq not implemented")
+func (UnimplementedImageServiceServer) ImageReqBase64(context.Context, *ImageBase64) (*Account, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ImageReqBase64 not implemented")
 }
 func (UnimplementedImageServiceServer) mustEmbedUnimplementedImageServiceServer() {}
 
@@ -74,20 +74,20 @@ func RegisterImageServiceServer(s grpc.ServiceRegistrar, srv ImageServiceServer)
 	s.RegisterService(&ImageService_ServiceDesc, srv)
 }
 
-func _ImageService_ImageReq_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ImageURL)
+func _ImageService_ImageReqBase64_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ImageBase64)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ImageServiceServer).ImageReq(ctx, in)
+		return srv.(ImageServiceServer).ImageReqBase64(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ImageService_ImageReq_FullMethodName,
+		FullMethod: ImageService_ImageReqBase64_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ImageServiceServer).ImageReq(ctx, req.(*ImageURL))
+		return srv.(ImageServiceServer).ImageReqBase64(ctx, req.(*ImageBase64))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -100,8 +100,98 @@ var ImageService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ImageServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ImageReq",
-			Handler:    _ImageService_ImageReq_Handler,
+			MethodName: "ImageReqBase64",
+			Handler:    _ImageService_ImageReqBase64_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "recognizer.proto",
+}
+
+const (
+	ImageRegistor_ImageReqURL_FullMethodName = "/recognizer.ImageRegistor/ImageReqURL"
+)
+
+// ImageRegistorClient is the client API for ImageRegistor service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ImageRegistorClient interface {
+	ImageReqURL(ctx context.Context, in *ImageURL, opts ...grpc.CallOption) (*Notice, error)
+}
+
+type imageRegistorClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewImageRegistorClient(cc grpc.ClientConnInterface) ImageRegistorClient {
+	return &imageRegistorClient{cc}
+}
+
+func (c *imageRegistorClient) ImageReqURL(ctx context.Context, in *ImageURL, opts ...grpc.CallOption) (*Notice, error) {
+	out := new(Notice)
+	err := c.cc.Invoke(ctx, ImageRegistor_ImageReqURL_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ImageRegistorServer is the server API for ImageRegistor service.
+// All implementations must embed UnimplementedImageRegistorServer
+// for forward compatibility
+type ImageRegistorServer interface {
+	ImageReqURL(context.Context, *ImageURL) (*Notice, error)
+	mustEmbedUnimplementedImageRegistorServer()
+}
+
+// UnimplementedImageRegistorServer must be embedded to have forward compatible implementations.
+type UnimplementedImageRegistorServer struct {
+}
+
+func (UnimplementedImageRegistorServer) ImageReqURL(context.Context, *ImageURL) (*Notice, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ImageReqURL not implemented")
+}
+func (UnimplementedImageRegistorServer) mustEmbedUnimplementedImageRegistorServer() {}
+
+// UnsafeImageRegistorServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ImageRegistorServer will
+// result in compilation errors.
+type UnsafeImageRegistorServer interface {
+	mustEmbedUnimplementedImageRegistorServer()
+}
+
+func RegisterImageRegistorServer(s grpc.ServiceRegistrar, srv ImageRegistorServer) {
+	s.RegisterService(&ImageRegistor_ServiceDesc, srv)
+}
+
+func _ImageRegistor_ImageReqURL_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ImageURL)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ImageRegistorServer).ImageReqURL(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ImageRegistor_ImageReqURL_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ImageRegistorServer).ImageReqURL(ctx, req.(*ImageURL))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ImageRegistor_ServiceDesc is the grpc.ServiceDesc for ImageRegistor service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ImageRegistor_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "recognizer.ImageRegistor",
+	HandlerType: (*ImageRegistorServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ImageReqURL",
+			Handler:    _ImageRegistor_ImageReqURL_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

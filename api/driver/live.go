@@ -14,14 +14,14 @@ import (
 )
 
 type RpcInput struct {
-	ImageURL string `json:"image_url" binding:"required"`
+	ImageBase64 string `json:"image_base64" binding:"required"`
 }
 
 type RpcOutput struct {
 	User *schema.UserOutput `json:"user"`
 }
 
-func InitLiveRouter(lr *gin.RouterGroup, conn *gorm.DB, client pb.ImageServiceClient) {
+func InitLiveRouter(gr *gin.RouterGroup, conn *gorm.DB, client pb.ImageServiceClient) {
 	// @Summary 顔識別
 	// @Tags live
 	// @Produce  json
@@ -30,7 +30,7 @@ func InitLiveRouter(lr *gin.RouterGroup, conn *gorm.DB, client pb.ImageServiceCl
 	// @Success 200 {object} RcpOutput
 	// @Failure 400 {object} error
 	// @Router /live/stream [post]
-	lr.POST("/stream",
+	gr.POST("/stream",
 		func(ctx *gin.Context) {
 			input := RpcInput{}
 			if err := ctx.ShouldBindJSON(&input); err != nil {
@@ -41,12 +41,11 @@ func InitLiveRouter(lr *gin.RouterGroup, conn *gorm.DB, client pb.ImageServiceCl
 				return
 
 			}
-			req := &pb.ImageURL{Url: input.ImageURL}
-			log.Print(input.ImageURL)
-			res, err := client.ImageReq(ctx, req, grpc.WaitForReady(true))
+			req := &pb.ImageBase64{Base: input.ImageBase64}
+			res, err := client.ImageReqBase64(ctx, req, grpc.WaitForReady(true))
 			if err != nil {
 				ctx.JSON(http.StatusInternalServerError, gin.H{
-					"error1": err.Error(),
+					"error": err.Error(),
 				})
 				return
 			}

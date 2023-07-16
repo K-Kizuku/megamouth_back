@@ -3,8 +3,17 @@ syntax = "proto3";
 package recognizer;
 option go_package = "pkg/grpc";
 
-message ImageURL { string url = 1; }
+message ImageURL {
+  string url = 1;
+  string id = 2;
+}
+
+message ImageBase64 { string base = 1; }
 
 message Account { string msg = 1; }
 
-service ImageService { rpc ImageReq(ImageURL) returns (Account); }
+message Notice { string res = 1; }
+
+service ImageService { rpc ImageReqBase64(ImageBase64) returns (Account); }
+
+service ImageRegistor { rpc ImageReqURL(ImageURL) returns (Notice); }
