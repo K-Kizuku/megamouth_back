@@ -16,6 +16,6 @@ ARG GOOS=linux
 # ARG GOARCH=amd64
 ARG GOARCH=arm64
 
-EXPOSE 8000
+EXPOSE 8000 50052
 
 CMD [ "go", "run", "." ]

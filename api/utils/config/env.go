@@ -9,6 +9,7 @@ import (
 
 var (
 	ApiPort       string
+	GRPCAddress   string
 	DbHost        string
 	DbUser        string
 	DbPass        string
@@ -23,6 +24,7 @@ func LoadEnv() {
 		log.Fatal(".env is not found")
 	}
 	ApiPort = getEnv("API_PORT", "8000")
+	GRPCAddress = getEnv("GRPC_ADDRESS", "50052")
 
 	DbHost = getEnv("POSTGRES_HOST", "localhost")
 	DbUser = getEnv("POSTGRES_USER", "user")

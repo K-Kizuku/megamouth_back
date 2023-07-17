@@ -33,12 +33,12 @@ func (u *User) CreateUser(ctx *gin.Context) {
 }
 
 func (u *User) LoginUser(ctx *gin.Context) {
-	user, err := u.UserRepo.LoginUser(ctx)
+	user, img, err := u.UserRepo.LoginUser(ctx)
 	if err != nil {
 		u.OutputPort.RenderError(err)
 		return
 	}
-	u.OutputPort.RenderJWTwithUser(user)
+	u.OutputPort.RenderJWTwithUser(user, img)
 }
 
 func (u *User) IsUsedName(ctx *gin.Context) {

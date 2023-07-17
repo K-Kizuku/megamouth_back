@@ -70,20 +70,24 @@ func (u *UserRepository) CreateUser(ctx *gin.Context) (*models.User, error) {
 	return &user, nil
 }
 
-func (u *UserRepository) LoginUser(ctx *gin.Context) (*models.User, error) {
+func (u *UserRepository) LoginUser(ctx *gin.Context) (*models.User, []models.Image, error) {
 	conn := u.GetDBConn()
 	input := schema.SignInInput{}
 	if err := ctx.ShouldBindJSON(&input); err != nil {
-		return nil, errors.New("bad request")
+		return nil, nil, errors.New("bad request")
 	}
 	user := models.User{}
 	if err := conn.Where("id = ?", input.ID).First(&user).Error; err != nil {
-		return nil, errors.New("user not found")
+		return nil, nil, errors.New("user not found")
 	}
 	if tools.Hash(input.Password) != user.PasswordHash {
-		return nil, errors.New("password invalid")
+		return nil, nil, errors.New("password invalid")
 	}
-	return &user, nil
+	img := []models.Image{}
+	if err := conn.Where("owner = ?", user.ID).Find(&img).Error; err != nil {
+		return nil, nil, errors.New("img not found")
+	}
+	return &user, img, nil
 }
 func (u *UserRepository) IsUsedName(ctx *gin.Context) (*models.User, error) {
 	conn := u.GetDBConn()

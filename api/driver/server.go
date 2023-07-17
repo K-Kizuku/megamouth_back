@@ -26,12 +26,13 @@ func Serve(addr string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	rpc, err := grpc.Dial("localhost:50052", grpc.WithInsecure())
+	rpc, err := grpc.Dial(config.GRPCAddress, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer rpc.Close()
-	client := pb.NewImageServiceClient(rpc)
+	clientS := pb.NewImageServiceClient(rpc)
+	clientR := pb.NewImageRegistorClient(rpc)
 	r := gin.Default()
 	r.Use(cors.Default())
 
@@ -55,7 +56,7 @@ func Serve(addr string) {
 
 			InitUserRouter(ur, conn)
 			InitPostRouter(pr, conn)
-			InitLiveRouter(gr, conn, client)
+			InitLiveRouter(gr, conn, clientS, clientR)
 		}
 	}
 	if err := r.Run(fmt.Sprintf(":%s", config.ApiPort)); err != nil {

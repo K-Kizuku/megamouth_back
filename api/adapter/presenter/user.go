@@ -36,10 +36,14 @@ func (u *User) Render(user *schema.UserOutput) {
 
 }
 
-func (u *User) RenderJWTwithUser(user *models.User) {
+func (u *User) RenderJWTwithUser(user *models.User, img []models.Image) {
 	jwt, _ := tools.GenerateJWT(user)
 	userOutput := schema.UserOutput{ID: user.ID, Name: user.Name}
-	u.ctx.JSON(http.StatusOK, schema.AuthOutputWithUser{Jwt: jwt.Jwt, User: userOutput})
+	imgOutput := make([]string, len(img))
+	for i, v := range img {
+		imgOutput[i] = v.URL
+	}
+	u.ctx.JSON(http.StatusOK, schema.AuthOutputWithUser{Jwt: jwt.Jwt, User: userOutput, ImageURL: imgOutput})
 }
 
 func (u *User) RenderJWT(user *models.User) {

@@ -37,8 +37,9 @@ type ImageInput struct {
 }
 
 type AuthOutputWithUser struct {
-	Jwt  string     `json:"jwt"`
-	User UserOutput `json:"user"`
+	Jwt      string     `json:"jwt"`
+	User     UserOutput `json:"user"`
+	ImageURL []string   `json:"image_url"`
 }
 
 type MessageOutput struct {

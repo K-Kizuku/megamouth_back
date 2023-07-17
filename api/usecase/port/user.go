@@ -17,7 +17,7 @@ type UserInputPort interface {
 type UserOutputPort interface {
 	Render(*schema.UserOutput)
 	RenderJWT(*models.User)
-	RenderJWTwithUser(*models.User)
+	RenderJWTwithUser(*models.User, []models.Image)
 	RenderError(error)
 	RenderIsUsed(bool)
 }
